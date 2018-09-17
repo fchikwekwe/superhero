@@ -23,7 +23,7 @@ class Hero:
         self.name = name
 
     def add_ability(self, ability):
-        self.ability = ability
+        # self.ability = ability
         self.abilities.append(ability)
 
     def attack(self):
@@ -34,7 +34,7 @@ class Hero:
             # add up all of the attacks
             self.attack_total += ability.attack()
         # return the total of all attacks
-        return ability.attack()
+        return self.attack_total
 
 if __name__ == "__main__":
     hero = Hero("Wonder Woman")
