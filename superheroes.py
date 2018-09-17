@@ -7,8 +7,11 @@ class Ability:
         self.attack_strength = attack_strength
 
     def attack(self):
+        # calculate lowest attack value as integer
         self.lowest_attack = self.attack_strength // 2
+        # select random attack value
         self.attack_value = random.randint(self.lowest_attack, self.attack_strength)
+        # return attack value
         return self.attack_value
 
     def update_attack(self, attack_strength):
@@ -24,9 +27,14 @@ class Hero:
         self.abilities.append(ability)
 
     def attack(self):
+        # total of all attacks
+        self.attack_total = 0
+        # call the attack method on every ability in list
         for ability in self.abilities:
-            ability.attack()
-            
+            # add up all of the attacks
+            self.attack_total += ability.attack()
+        # return the total of all attacks
+        return ability.attack()
 
 if __name__ == "__main__":
     hero = Hero("Wonder Woman")
