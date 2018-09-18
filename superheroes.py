@@ -24,6 +24,12 @@ class Hero:
         self.abilities = list()
         self.name = name
 
+        self.armors = list()
+        self.start_health = start_health
+        self.health = start_health
+        self.deaths = 0
+        self.kills = 0
+
     def add_ability(self, ability):
         # self.ability = ability
         self.abilities.append(ability)
@@ -37,6 +43,18 @@ class Hero:
             self.attack_total += int(ability.attack())
         # return the total of all attacks
         return self.attack_total
+
+    def defend(self):
+        for armor in self.armors:
+
+    def take_damage(self, damage_amt):
+        if self.health <= 0:
+            self.deaths += 1
+        else:
+            self.health -= self.damage_amt
+
+    def add_kill(self, num_kills):
+        self.kills += num_kills
 
 class Weapon(Ability):
     def attack(self):
@@ -73,6 +91,14 @@ class Team:
         else:
             for hero in self.heroes:
                 print(hero.name)
+
+class Armor:
+    def __init__(self, name, defense):
+        self.name = name
+        self.defense = defense
+
+    def defense(self):
+        self.defend = random.randint(0, self.defense)
 
 if __name__ == "__main__":
     hero = Hero("Wonder Woman")
