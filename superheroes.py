@@ -1,3 +1,5 @@
+# /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import random
 
@@ -15,7 +17,7 @@ class Ability:
         return self.attack_value
 
     def update_attack(self, attack_strength):
-        self.attack_strength = attack_value.attack()
+        self.attack_strength = attack_strength
 
 class Hero:
     def __init__(self, name):
@@ -32,9 +34,45 @@ class Hero:
         # call the attack method on every ability in list
         for ability in self.abilities:
             # add up all of the attacks
-            self.attack_total += ability.attack()
+            self.attack_total += int(ability.attack())
         # return the total of all attacks
         return self.attack_total
+
+class Weapon(Ability):
+    def attack(self):
+        self.lowest_attack = 0
+        self.attack_value = random.randint(self.lowest_attack, self.attack_strength)
+        return self.attack_value
+
+class Team:
+    def __init__(self, team_name):
+        self.name = team_name
+        self.heroes = list()
+
+    def add_hero(self, Hero):
+        self.heroes.append(Hero)
+
+    def remove_hero(self, name):
+        for hero in self.heroes:
+            if hero.name == name:
+                index_num = self.heroes.index(hero)
+                self.heroes.pop(index_num)
+            else:
+                pass
+        return 0
+
+    def find_hero(self, name):
+        for hero in self.heroes:
+            if hero.name == name:
+                return hero
+        return 0
+
+    def view_all_heroes(self):
+        if len(self.heroes) == 0:
+            return None
+        else:
+            for hero in self.heroes:
+                print(hero.name)
 
 if __name__ == "__main__":
     hero = Hero("Wonder Woman")
