@@ -1,5 +1,3 @@
-# /usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import random
 
@@ -40,22 +38,25 @@ class Hero:
         # call the attack method on every ability in list
         for ability in self.abilities:
             # add up all of the attacks
-            self.attack_total += int(ability.attack())
+            self.attack_total += Ability.attack(ability)
         # return the total of all attacks
         return self.attack_total
 
     def defend(self):
-        self.total_defense = 0
+        total_defense = 0
         # run the defend method on each piece of armor and calculate the total defense
         for armor in self.armors:
-            if self.health > 0:
-                self.total_defense += int(armor.defense)
-            else:
-                self.total_defense = 0
-        return self.total_defense
+            # if self.health > 0:
+            total_defense += armor.defend()
+            # else:
+            #     total_defense = 0
+        return total_defense
 
     def take_damage(self, damage_amt):
         if self.health <= 0:
+            self.deaths += 1
+        elif self.health <= damage_amt:
+            self.health -= self.damage_amt
             self.deaths += 1
         else:
             self.health -= self.damage_amt
@@ -106,58 +107,74 @@ class Team:
         team_attack = 0
         for hero in self.heroes:
             team_attack += hero.attack()
-        other_team.defend(team_attack)
+        num_kills = other_team.defend(team_attack)
 
-        for hero in other_team.heroes:
-            num_kills = 0
-            if hero.health <= 0:
-                add_kill(num_kills)
+        for hero in self.heroes:
+            hero.add_kill(num_kills)
 
     def deal_damage(self, damage):
-        hero_damage = damage / len(self.heroes)
+        team_deaths = 0
+        hero_damage = damage // len(self.heroes)
         for hero in self.heroes:
-            if hero.health > 0:
-                hero.health -= hero_damage
-                return hero.health
-            else:
-                pass
-
             if hero.health <= 0:
                 hero.deaths += 1
                 team_deaths += 1
-                return team_deaths
+            elif hero.health <= hero_damage:
+                hero.health -= hero_damage
+                hero.deaths += 1
+                team_deaths += 1
+            elif hero.health > hero_damage:
+                hero.health -= hero_damage
             else:
-                pass
+                hero.health -= hero_damage
+        return team_deaths
 
     def defend(self, damage_amt):
         team_defense = 0
         for hero in self.heroes:
-            hero_defense = hero.defend()
-            team_defense += hero_defense
-        excess_damage = team_defense - damage_amt
-        self.deal_damage(excess_damage)
+            team_defense += hero.defend()
+        excess_damage = damage_amt - team_defense
+        if excess_damage <= 0:
+            return 0
+        else:
+            return self.deal_damage(excess_damage)
 
     def revive_heroes(self, health = 100):
         for hero in self.heroes:
-            health = 100
+            hero.health = hero.start_health
 
     def stats(self):
         for hero in self.heroes:
-            print(self.name)
-            print(self.kills / self.deaths)
+            print(hero.name)
+            print(hero.kills / hero.deaths)
 
     def update_kills(self):
         for hero in self.heroes:
-            pass
+            hero.kills += self.kills
+        return self.kills
 
 class Armor:
     def __init__(self, name, defense):
         self.name = name
         self.defense = defense
 
-    def defense(self):
-        self.defend = random.randint(0, self.defense)
-        return self.defend
+    def defend(self):
+        defend = random.randint(0, self.defense)
+        return defend
+
+class Arena:
+    def __init__(self):
+        self.team_one = list()
+        self.team_two = list()
+
+    def build_team_one(self):
+
+    def build_team_two(self):
+
+    def team_battle(self):
+
+    def show_stats(self):
+
 
 if __name__ == "__main__":
     hero = Hero("Wonder Woman")
