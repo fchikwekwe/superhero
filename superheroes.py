@@ -20,13 +20,13 @@ class Ability:
         self.attack_strength = attack_strength
 
 class Hero:
-    def __init__(self, name):
+    def __init__(self, name, health = 100):
         self.abilities = list()
         self.name = name
 
         self.armors = list()
-        self.start_health = start_health
-        self.health = start_health
+        self.start_health = health
+        self.health = health
         self.deaths = 0
         self.kills = 0
 
@@ -45,7 +45,14 @@ class Hero:
         return self.attack_total
 
     def defend(self):
+        self.total_defense = 0
+        # run the defend method on each piece of armor and calculate the total defense
         for armor in self.armors:
+            if self.health > 0:
+                self.total_defense += int(armor.defense)
+            else:
+                self.total_defense = 0
+        return self.total_defense
 
     def take_damage(self, damage_amt):
         if self.health <= 0:
@@ -55,6 +62,9 @@ class Hero:
 
     def add_kill(self, num_kills):
         self.kills += num_kills
+
+    def add_armor(self, armor):
+        self.armors.append(armor)
 
 class Weapon(Ability):
     def attack(self):
@@ -92,6 +102,54 @@ class Team:
             for hero in self.heroes:
                 print(hero.name)
 
+    def attack(self, other_team):
+        team_attack = 0
+        for hero in self.heroes:
+            team_attack += hero.attack()
+        other_team.defend(team_attack)
+
+        for hero in other_team.heroes:
+            num_kills = 0
+            if hero.health <= 0:
+                add_kill(num_kills)
+
+    def deal_damage(self, damage):
+        hero_damage = damage / len(self.heroes)
+        for hero in self.heroes:
+            if hero.health > 0:
+                hero.health -= hero_damage
+                return hero.health
+            else:
+                pass
+
+            if hero.health <= 0:
+                hero.deaths += 1
+                team_deaths += 1
+                return team_deaths
+            else:
+                pass
+
+    def defend(self, damage_amt):
+        team_defense = 0
+        for hero in self.heroes:
+            hero_defense = hero.defend()
+            team_defense += hero_defense
+        excess_damage = team_defense - damage_amt
+        self.deal_damage(excess_damage)
+
+    def revive_heroes(self, health = 100):
+        for hero in self.heroes:
+            health = 100
+
+    def stats(self):
+        for hero in self.heroes:
+            print(self.name)
+            print(self.kills / self.deaths)
+
+    def update_kills(self):
+        for hero in self.heroes:
+            pass
+
 class Armor:
     def __init__(self, name, defense):
         self.name = name
@@ -99,6 +157,7 @@ class Armor:
 
     def defense(self):
         self.defend = random.randint(0, self.defense)
+        return self.defend
 
 if __name__ == "__main__":
     hero = Hero("Wonder Woman")
