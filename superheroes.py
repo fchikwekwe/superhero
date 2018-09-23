@@ -78,6 +78,7 @@ class Team:
         self.name = team_name
         self.heroes = list()
 
+
     def add_hero(self, Hero):
         self.heroes.append(Hero)
 
@@ -164,24 +165,118 @@ class Armor:
 
 class Arena:
     def __init__(self):
-        self.team_one = list()
-        self.team_two = list()
+        self.team_one = None
+        self.team_two = None
 
     def build_team_one(self):
+        justice_league = ["Batman", "Wonder Woman", "The Flash", "Superman"]
+        stark_family = ["Arya", "Jon Snow", "Ned's Head", "Three Eyed Raven"]
+        normandy_crew = ["Commander Shepard", "Garrus", "Liara", "Tali'Zorah vas Normandy"]
+        zoo_animals = ["African Elephant", "Boa Constrictor", "Deadly Penguin", "Harmless Lion"]
+        team_one_options2 = [justice_league, stark_family, normandy_crew, zoo_animals]
+
+        team_not_picked = True
+        while team_not_picked:
+            team_select = input("Please pick a your team from the following options: \n Enter '0' for The Justice League \n enter '1' for The Stark Family from Game of Thrones \n enter '2' for the crew of the Normandy from Mass Effect \n enter '3' for some feisty zoo animals. \n enter '4' to create your own team from scratch \n : ")
+            if team_select == "0":
+                self.team_one = justice_league
+                team_not_picked = False
+            elif team_select == "1":
+                self.team_one = stark_family
+                team_not_picked = False
+            elif team_select == "2":
+                self.team_one = normandy_crew
+                team_not_picked = False
+            elif team_select == "3":
+                self.team_one = zoo_animals
+                team_not_picked = False
+            elif team_select == "4":
+                self.team_one = list()
+                team_not_picked = False
+            else:
+                print("Please pick a valid team option. ")
 
     def build_team_two(self):
+        avengers = ["Captain America", "Black Panther", "Iron Man", "Thor"]
+        daenerys_and_dragons = ["Daenerys Targaryen", "Drogon", "Rhaegal", "Viserion"]
+        late_night_comedians = ["John Oliver", "Trevor Noah", "Jimmy Kimmel", "Steven Colbert"]
+        disney_princesses = ["Mulan", "Pocahontas", "Jasmine", "Moana"]
+        team_two_options = [avengers, daenerys_and_dragons, late_night_comedians, disney_princesses]
 
-    def team_battle(self):
+        team_not_picked = True
+        while team_not_picked:
+            team_select = input("Please pick a your team from the following options: \n Enter '0' for The Avengers \n enter '1' for Daenerys and her dragons from Game of Thrones \n enter '2' for some late night comedians \n enter '3' for Disney Princesses. \n enter '4' to create your own team from scratch \n : ")
+            if team_select == "0":
+                self.team_two = avengers
+                team_not_picked = False
+            elif team_select == "1":
+                self.team_two = daenerys_and_dragons
+                team_not_picked = False
+            elif team_select == "2":
+                self.team_two = late_night_comedians
+                team_not_picked = False
+            elif team_select == "3":
+                self.team_two = disney_princesses
+                team_not_picked = False
+            elif team_select == "4":
+                self.team_two = list()
+                team_not_picked = False
+            else:
+                print("Please pick a valid team option. ")
+
+    def edit_team(self, team):
+        team_not_edited = True
+        while team_not_edited:
+            print("Your team consists of ", team)
+            add_remove = input("Would you like to add or remove any heroes from your team? \nType 'R' to remove, 'A' to add or 'N' if you do not want to change the composition of your team \n : ")
+            if add_remove.lower() == 'r':
+                number = str(len(team))
+                remove = input("Please select the list number of the hero you would like to remove. You can select between 1 and " + number + ", respectively. \n : ")
+                if remove.isdigit():
+                    try:
+                        team.pop(int(remove) - 1)
+                    except IndexError:
+                        print("Make sure your choice is between 0 and " + remove + ".")
+                elif remove.isdigit() == False:
+                    print("Please try again. ")
+            elif add_remove.lower() == 'a':
+                number = str(len(team))
+                add = input("Please name the hero that you would like to add. \n : ")
+                team.append(add)
+            elif add_remove.lower() == 'n':
+                team_not_edited = False
+            else:
+                print("Please provide a valid choice. ")
+
+    # def equip_heroes(self, team):
+    #     for hero in team:
+    #         add_ability = True
+    #         while add_ability:
+
 
     def show_stats(self):
+        for hero in self.team_one:
+            # attack(build_team_two) is kills / defend( build_team_one ) is deaths
+            kill_death_ratio = int(attack(build_team_two) / defend(build_team_one))
+            print("The kill to death ratio for {} is {}").format(hero.name, kill_death_ratio)
+        for hero in self.team_two:
+            kill_death_ratio = int(attack(build_team_one) / defend(build_team_two))
+            print("The kill to death ratio for {} is {}").format(hero.name, kill_death_ratio)
+
+    def fight(self):
+        self.build_team_one()
+        self.edit_team(self.team_one)
+        self.build_team_two()
+        self.edit_team(self.team_two)
 
 
 if __name__ == "__main__":
-    hero = Hero("Wonder Woman")
-    print(hero.attack())
-    ability = Ability("Divine Speed", 300)
-    hero.add_ability(ability)
-    print(hero.attack())
-    new_ability = Ability("Super Human Strength", 800)
-    hero.add_ability(new_ability)
-    print(hero.attack())
+#     hero = Hero("Wonder Woman")
+#     print(hero.attack())
+#     ability = Ability("Divine Speed", 300)
+#     hero.add_ability(ability)
+#     print(hero.attack())
+#     new_ability = Ability("Super Human Strength", 800)
+#     hero.add_ability(new_ability)
+#     print(hero.attack())
+    Arena().fight()
