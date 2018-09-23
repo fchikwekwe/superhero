@@ -173,25 +173,30 @@ class Arena:
         stark_family = ["Arya", "Jon Snow", "Ned's Head", "Three Eyed Raven"]
         normandy_crew = ["Commander Shepard", "Garrus", "Liara", "Tali'Zorah vas Normandy"]
         zoo_animals = ["African Elephant", "Boa Constrictor", "Deadly Penguin", "Harmless Lion"]
-        team_one_options2 = [justice_league, stark_family, normandy_crew, zoo_animals]
 
+        self.team_one = Team("first_team")
         team_not_picked = True
         while team_not_picked:
             team_select = input("Please pick a your team from the following options: \n Enter '0' for The Justice League \n enter '1' for The Stark Family from Game of Thrones \n enter '2' for the crew of the Normandy from Mass Effect \n enter '3' for some feisty zoo animals. \n enter '4' to create your own team from scratch \n : ")
             if team_select == "0":
-                self.team_one = justice_league
+                self.team_one.name = "Justice League"
+                self.team_one.heroes = justice_league
                 team_not_picked = False
             elif team_select == "1":
-                self.team_one = stark_family
+                self.team_one.name = "The Stark Family"
+                self.team_one.heroes = stark_family
                 team_not_picked = False
             elif team_select == "2":
-                self.team_one = normandy_crew
+                self.team_one.name = "The Normandy Crew"
+                self.team_one.heroes = normandy_crew
                 team_not_picked = False
             elif team_select == "3":
-                self.team_one = zoo_animals
+                self.team_one.name = "Random Zoo Animals"
+                self.team_one.heroes = zoo_animals
                 team_not_picked = False
             elif team_select == "4":
-                self.team_one = list()
+                self.team_one.name = input("Name your team! \n: ")
+                self.team_one.heroes = list()
                 team_not_picked = False
             else:
                 print("Please pick a valid team option. ")
@@ -201,25 +206,30 @@ class Arena:
         daenerys_and_dragons = ["Daenerys Targaryen", "Drogon", "Rhaegal", "Viserion"]
         late_night_comedians = ["John Oliver", "Trevor Noah", "Jimmy Kimmel", "Steven Colbert"]
         disney_princesses = ["Mulan", "Pocahontas", "Jasmine", "Moana"]
-        team_two_options = [avengers, daenerys_and_dragons, late_night_comedians, disney_princesses]
 
+        self.team_two = Team("second_team")
         team_not_picked = True
         while team_not_picked:
             team_select = input("Please pick a your team from the following options: \n Enter '0' for The Avengers \n enter '1' for Daenerys and her dragons from Game of Thrones \n enter '2' for some late night comedians \n enter '3' for Disney Princesses. \n enter '4' to create your own team from scratch \n : ")
             if team_select == "0":
-                self.team_two = avengers
+                self.team_two.name = "The Avengers"
+                self.team_two.heroes = avengers
                 team_not_picked = False
             elif team_select == "1":
-                self.team_two = daenerys_and_dragons
+                self.team_two.name = "Daenerys and her Dragons"
+                self.team_two.heroes = daenerys_and_dragons
                 team_not_picked = False
             elif team_select == "2":
-                self.team_two = late_night_comedians
+                self.team_two.name = "Some Late Night Comedians"
+                self.team_two.heroes  = late_night_comedians
                 team_not_picked = False
             elif team_select == "3":
-                self.team_two = disney_princesses
+                self.team_two.name = "Disney Princesses"
+                self.team_two.heroes = disney_princesses
                 team_not_picked = False
             elif team_select == "4":
-                self.team_two = list()
+                self.team_two.name = input("Name Your Team! \n: ")
+                self.team_two.heroes = list()
                 team_not_picked = False
             else:
                 print("Please pick a valid team option. ")
@@ -248,11 +258,63 @@ class Arena:
             else:
                 print("Please provide a valid choice. ")
 
-    # def equip_heroes(self, team):
-    #     for hero in team:
-    #         add_ability = True
-    #         while add_ability:
+    def equip_heroes(self, team):
+        for hero in team:
+            hero = Hero(team[team.index(hero)])
+            adding_abilities = True
+            while adding_abilities:
+                print(hero.name, "currently has the following abilities and weapons: ", hero.abilities)
+                add_more = input("Would you like to add another ability or weapon to " + hero.name + " ? \n type 'Y' for yes or 'N' for no \n: ")
+                if add_more.lower() == 'n' or add_more.lower() == 'no':
+                    adding_abilities = False
+                elif add_more.lower() == 'y' or add_more.lower() == 'yes':
+                    ability = input("Name " + hero.name + "'s new ability or weapon \n: ")
+                    hero.add_ability(ability)
+                else:
+                    print("Please select a valid option. ")
+            for ability in hero.abilities:
+                current_ability = hero.abilities[ability.index(ability)]
+                print(hero.name, "currently has the following abilities and weapons: ", hero.abilities)
+                add_power = True
+                while add_power:
+                    try:
+                        power = input("How much power can " + current_ability + " dish out? \n:")
+                    except ValueError:
+                        print("Make sure your power level is a whole number.")
+                        continue
+                    if power.isdigit():
+                        ability = Ability(current_ability, power)
+                        print(ability.name, "currently deals", ability.attack_strength, "damage.")
+                        add_power = False
+                    else:
+                        print("Please make sure your power level is a whole number. ")
 
+            adding_armor = True
+            while adding_armor:
+                print(hero.name, "currently has the following armor: ", hero.armors)
+                add_more = input("Would you like to add another piece of armor to " + hero.name + " ? \n type 'Y' for yes or 'N' for no \n: ")
+                if add_more.lower() == 'n' or add_more.lower() == 'no':
+                    adding_armor = False
+                elif add_more.lower() == 'y' or add_more.lower() == 'yes':
+                    armor = input("Name " + hero.name + "'s new armor \n: ")
+                    hero.add_armor(armor)
+                else:
+                    print("Please select a valid option. ")
+            for armor in hero.armors:
+                current_armor = hero.armors[armor.index(armor)]
+                print(hero.name, "currently has the following armor pieces: ", hero.armors)
+                add_power = True
+                while add_power:
+                    try:
+                        power = input("How much power can " + current_armor + " defend against? \n:")
+                    except ValueError:
+                        print("Please make sure your defense level is a whole number.")
+                    if power.isdigit():
+                        armor = Armor(current_armor, power)
+                        print(armor.name, "currently protects against", armor.defense, "damage.")
+                        add_power = False
+                    else:
+                        print("Please make sure your power level is a whole number. ")
 
     def show_stats(self):
         for hero in self.team_one:
@@ -265,9 +327,10 @@ class Arena:
 
     def fight(self):
         self.build_team_one()
-        self.edit_team(self.team_one)
+        self.edit_team(self.team_one.heroes)
         self.build_team_two()
-        self.edit_team(self.team_two)
+        self.edit_team(self.team_two.heroes)
+        self.equip_heroes(self.team_one.heroes)
 
 
 if __name__ == "__main__":
