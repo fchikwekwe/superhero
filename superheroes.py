@@ -18,7 +18,7 @@ class Ability:
         self.attack_strength = attack_strength
 
 class Hero:
-    def __init__(self, name, health = 100):
+    def __init__(self, name, health=100):
         self.abilities = list()
         self.name = name
 
@@ -46,10 +46,7 @@ class Hero:
         total_defense = 0
         # run the defend method on each piece of armor and calculate the total defense
         for armor in self.armors:
-            # if self.health > 0:
             total_defense += armor.defend()
-            # else:
-            #     total_defense = 0
         return total_defense
 
     def take_damage(self, damage_amt):
@@ -105,11 +102,17 @@ class Team:
                 print(hero.name)
 
     def attack(self, other_team):
+        # create a variable to track total team damage
         team_attack = 0
+        # print off each hero's name
+        hero_names = [hero.name for hero in self.heroes]
+        print(self.name, "currently contains", hero_names)
+        # go to each hero object in our list of hero objects
         for hero in self.heroes:
+            # get the attack value from the hero and add it to total team attack
             team_attack += hero.attack()
+        # create a variable that store the total kills based on the other team's defense
         num_kills = other_team.defend(team_attack)
-
         for hero in self.heroes:
             hero.add_kill(num_kills)
 
@@ -118,8 +121,7 @@ class Team:
         hero_damage = damage // len(self.heroes)
         for hero in self.heroes:
             if hero.health <= 0:
-                hero.deaths += 1
-                team_deaths += 1
+                continue
             elif hero.health <= hero_damage:
                 hero.health -= hero_damage
                 hero.deaths += 1
@@ -146,13 +148,12 @@ class Team:
 
     def stats(self):
         for hero in self.heroes:
-            print(hero.name)
-            print(hero.kills / hero.deaths)
+            print("{} {} deaths: {} kills: {}".format(hero.name, hero.kills/hero.deaths, hero.deaths, hero.kills))
 
     def update_kills(self):
         for hero in self.heroes:
-            hero.kills += self.kills
-        return self.kills
+            team_kills += hero.kills
+        return team_kills
 
 class Armor:
     def __init__(self, name, defense):
@@ -169,34 +170,46 @@ class Arena:
         self.team_two = None
 
     def build_team_one(self):
+        # premade teams to choose from
         justice_league = ["Batman", "Wonder Woman", "The Flash", "Superman"]
         stark_family = ["Arya", "Jon Snow", "Ned's Head", "Three Eyed Raven"]
         normandy_crew = ["Commander Shepard", "Garrus", "Liara", "Tali'Zorah vas Normandy"]
         zoo_animals = ["African Elephant", "Boa Constrictor", "Deadly Penguin", "Harmless Lion"]
 
         self.team_one = Team("first_team")
+        # team select
         team_not_picked = True
         while team_not_picked:
             team_select = input("Please pick a your team from the following options: \n Enter '0' for The Justice League \n enter '1' for The Stark Family from Game of Thrones \n enter '2' for the crew of the Normandy from Mass Effect \n enter '3' for some feisty zoo animals. \n enter '4' to create your own team from scratch \n : ")
             if team_select == "0":
                 self.team_one.name = "Justice League"
-                self.team_one.heroes = justice_league
+                for leaguer in justice_league:
+                    hero = Hero(leaguer)
+                    self.team_one.add_hero(hero)
                 team_not_picked = False
             elif team_select == "1":
                 self.team_one.name = "The Stark Family"
-                self.team_one.heroes = stark_family
+                for stark in stark_family:
+                    hero = Hero(stark)
+                    self.team_one.add_hero(hero)
                 team_not_picked = False
             elif team_select == "2":
                 self.team_one.name = "The Normandy Crew"
-                self.team_one.heroes = normandy_crew
+                for being in normandy_crew:
+                    hero = Hero(being)
+                    self.team_one.add_hero(hero)
                 team_not_picked = False
             elif team_select == "3":
                 self.team_one.name = "Random Zoo Animals"
-                self.team_one.heroes = zoo_animals
+                for animal in zoo_animals:
+                    hero = Hero(animal)
+                    self.team_one.add_hero(hero)
                 team_not_picked = False
             elif team_select == "4":
                 self.team_one.name = input("Name your team! \n: ")
-                self.team_one.heroes = list()
+                for one in self.team_one.heroes:
+                    hero = Hero(one)
+                    self.team_one.add_hero(hero)
                 team_not_picked = False
             else:
                 print("Please pick a valid team option. ")
@@ -213,31 +226,43 @@ class Arena:
             team_select = input("Please pick a your team from the following options: \n Enter '0' for The Avengers \n enter '1' for Daenerys and her dragons from Game of Thrones \n enter '2' for some late night comedians \n enter '3' for Disney Princesses. \n enter '4' to create your own team from scratch \n : ")
             if team_select == "0":
                 self.team_two.name = "The Avengers"
-                self.team_two.heroes = avengers
+                for avenger in avengers:
+                    hero = Hero(avenger)
+                    self.team_two.add_hero(hero)
                 team_not_picked = False
             elif team_select == "1":
                 self.team_two.name = "Daenerys and her Dragons"
-                self.team_two.heroes = daenerys_and_dragons
+                for dragonborn in daenerys_and_dragons:
+                    hero = Hero(dragonborn)
+                    self.team_two.add_hero(hero)
                 team_not_picked = False
             elif team_select == "2":
                 self.team_two.name = "Some Late Night Comedians"
-                self.team_two.heroes  = late_night_comedians
+                for comedian in late_night_comedians:
+                    hero = Hero(comedian)
+                    self.team_two.add_hero(hero)
                 team_not_picked = False
             elif team_select == "3":
                 self.team_two.name = "Disney Princesses"
-                self.team_two.heroes = disney_princesses
+                for princess in disney_princesses:
+                    hero = Hero(princess)
+                    self.team_two.add_hero(hero)
                 team_not_picked = False
             elif team_select == "4":
                 self.team_two.name = input("Name Your Team! \n: ")
-                self.team_two.heroes = list()
+                for one in self.team_two.heroes:
+                    hero = Hero(one)
+                    self.team_two.add_hero(Hero)
                 team_not_picked = False
             else:
                 print("Please pick a valid team option. ")
 
     def edit_team(self, team):
+        # allow changes to team comp
         team_not_edited = True
         while team_not_edited:
-            print("Your team consists of ", team)
+            for x in team:
+                print(x.name, "is on your team!")
             add_remove = input("Would you like to add or remove any heroes from your team? \nType 'R' to remove, 'A' to add or 'N' if you do not want to change the composition of your team \n : ")
             if add_remove.lower() == 'r':
                 number = str(len(team))
@@ -249,6 +274,7 @@ class Arena:
                         print("Make sure your choice is between 0 and " + remove + ".")
                 elif remove.isdigit() == False:
                     print("Please try again. ")
+                    # fix adding object not string
             elif add_remove.lower() == 'a':
                 number = str(len(team))
                 add = input("Please name the hero that you would like to add. \n : ")
@@ -258,88 +284,113 @@ class Arena:
             else:
                 print("Please provide a valid choice. ")
 
-    def equip_heroes(self, team):
-        for hero in team:
-            hero = Hero(team[team.index(hero)])
-            adding_abilities = True
-            while adding_abilities:
-                print(hero.name, "currently has the following abilities and weapons: ", hero.abilities)
-                add_more = input("Would you like to add another ability or weapon to " + hero.name + " ? \n type 'Y' for yes or 'N' for no \n: ")
-                if add_more.lower() == 'n' or add_more.lower() == 'no':
-                    adding_abilities = False
-                elif add_more.lower() == 'y' or add_more.lower() == 'yes':
-                    ability = input("Name " + hero.name + "'s new ability or weapon \n: ")
-                    hero.add_ability(ability)
-                else:
-                    print("Please select a valid option. ")
-            for ability in hero.abilities:
-                current_ability = hero.abilities[ability.index(ability)]
-                print(hero.name, "currently has the following abilities and weapons: ", hero.abilities)
-                add_power = True
-                while add_power:
-                    try:
-                        power = input("How much power can " + current_ability + " dish out? \n:")
-                    except ValueError:
-                        print("Make sure your power level is a whole number.")
-                        continue
-                    if power.isdigit():
-                        ability = Ability(current_ability, power)
-                        print(ability.name, "currently deals", ability.attack_strength, "damage.")
-                        add_power = False
-                    else:
-                        print("Please make sure your power level is a whole number. ")
+    def add_ability(self, fighter):
+        ability_list = [ability.name for ability in fighter.abilities]
+        print(fighter.name, "currently has: ", ability_list, "in weapon/ability loadout.")
+        adding_abilities = True
+        while adding_abilities:
+            add_more = input("Would you like to add another ability or weapon to " + fighter.name + " ? \n type 'Y' for yes or 'N' for no \n: ")
+            if add_more.lower() == 'n' or add_more.lower() == 'no':
+                adding_abilities = False
+            elif add_more.lower() == 'y' or add_more.lower() == 'yes':
+                ability_input = input("Name " + fighter.name + "'s new ability or weapon \n: ")
+                try:
+                    power = input("How much power can " + ability_input + " dish out? \n:")
+                    add_power = True
+                    while add_power:
+                        if power.isdigit():
+                            print("This power can deal up to", power , "damage.")
+                            add_power = False
+                        else:
+                            print("Please make sure your max power level is a whole number. ")
+                except ValueError:
+                    print("Make sure your power level is a whole number.")
+                ability = Ability(ability_input, int(power))
+                fighter.add_ability(ability)
+            else:
+                print("Please select a valid option. ")
 
+    def add_armor(self, fighter):
+            armor_list = [armor.name for armor in fighter.armors]
+            print(fighter.name, "currently has: ", armor_list, "in armor loadout.")
             adding_armor = True
             while adding_armor:
-                print(hero.name, "currently has the following armor: ", hero.armors)
-                add_more = input("Would you like to add another piece of armor to " + hero.name + " ? \n type 'Y' for yes or 'N' for no \n: ")
+                add_more = input("Would you like to add another armor to " + fighter.name + " ? \n type 'Y' for yes or 'N' for no \n: ")
                 if add_more.lower() == 'n' or add_more.lower() == 'no':
                     adding_armor = False
                 elif add_more.lower() == 'y' or add_more.lower() == 'yes':
-                    armor = input("Name " + hero.name + "'s new armor \n: ")
-                    hero.add_armor(armor)
+                    armor_input = input("Name " + fighter.name + "'s new armor \n: ")
+                    try:
+                        power = input("How much power can " + armor_input + " protect against? \n:")
+                        add_power = True
+                        while add_power:
+                            if power.isdigit():
+                                print("This armor currently defends against", power , "damage.")
+                                add_power = False
+                            else:
+                                print("Please make sure your armor level is a whole number. ")
+                    except ValueError:
+                        print("Make sure your armor level is a whole number.")
+                    armor = Armor(armor_input, int(power))
+                    fighter.add_armor(armor)
                 else:
                     print("Please select a valid option. ")
-            for armor in hero.armors:
-                current_armor = hero.armors[armor.index(armor)]
-                print(hero.name, "currently has the following armor pieces: ", hero.armors)
-                add_power = True
-                while add_power:
-                    try:
-                        power = input("How much power can " + current_armor + " defend against? \n:")
-                    except ValueError:
-                        print("Please make sure your defense level is a whole number.")
-                    if power.isdigit():
-                        armor = Armor(current_armor, power)
-                        print(armor.name, "currently protects against", armor.defense, "damage.")
-                        add_power = False
-                    else:
-                        print("Please make sure your power level is a whole number. ")
+
+    def equip_heroes(self, team):
+        for fighter in team.heroes:
+            self.add_ability(fighter)
+            self.add_armor(fighter)
 
     def show_stats(self):
-        for hero in self.team_one:
-            # attack(build_team_two) is kills / defend( build_team_one ) is deaths
-            kill_death_ratio = int(attack(build_team_two) / defend(build_team_one))
-            print("The kill to death ratio for {} is {}").format(hero.name, kill_death_ratio)
-        for hero in self.team_two:
-            kill_death_ratio = int(attack(build_team_one) / defend(build_team_two))
-            print("The kill to death ratio for {} is {}").format(hero.name, kill_death_ratio)
+        self.team_one.stats()
+        self.team_two.stats()
 
     def fight(self):
         self.build_team_one()
         self.edit_team(self.team_one.heroes)
         self.build_team_two()
         self.edit_team(self.team_two.heroes)
-        self.equip_heroes(self.team_one.heroes)
+        self.equip_heroes(self.team_one)
+        self.equip_heroes(self.team_two)
+
+        coin_flip = random.randint(1, 2)
+        print("Coin flip selects team ", coin_flip)
+        if coin_flip == 1:
+            self.team_one.attack(self.team_two)
+            self.team_two.attack(self.team_one)
+        else:
+            self.team_two.attack(self.team_one)
+            self.team_one.attack(self.team_two)
+
+        print(self.show_stats())
+        self.show_stats()
 
 
 if __name__ == "__main__":
-#     hero = Hero("Wonder Woman")
-#     print(hero.attack())
-#     ability = Ability("Divine Speed", 300)
-#     hero.add_ability(ability)
-#     print(hero.attack())
-#     new_ability = Ability("Super Human Strength", 800)
-#     hero.add_ability(new_ability)
-#     print(hero.attack())
+    hero = Hero("Wonder Woman")
+    ability = Ability("Divine Speed", 300)
+    hero.add_ability(ability)
+
+    other_hero = Hero("Flash")
+    other_ability = Ability("Super Fast", 200)
+    other_hero.add_ability(other_ability)
+
+    # print(hero.attack())
+    # print(hero.attack())
+    # new_ability = Ability("Super Human Strength", 800)
+    # hero.add_ability(new_ability)
+    # print(hero.attack())
+
+    team = Team("Test Team")
+    team.add_hero(hero)
+
+    other_team = Team("Other Test Team")
+    other_team.add_hero(other_hero)
+
+    # print(other_team)
+    # print(team)
+
+    team.attack(other_team)
+
+
     Arena().fight()
