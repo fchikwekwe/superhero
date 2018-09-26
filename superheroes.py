@@ -130,7 +130,7 @@ class Team:
                 hero.health -= hero_damage
             else:
                 hero.health -= hero_damage
-        return team_deaths
+        return hero.deaths
 
     def defend(self, damage_amt):
         team_defense = 0
@@ -142,18 +142,21 @@ class Team:
         else:
             return self.deal_damage(excess_damage)
 
-    def revive_heroes(self, health = 100):
+    def revive_heroes(self, health=100):
         for hero in self.heroes:
             hero.health = hero.start_health
 
     def stats(self):
         for hero in self.heroes:
-            print("{} {} deaths: {} kills: {}".format(hero.name, hero.kills/hero.deaths, hero.deaths, hero.kills))
+            if hero.deaths > 0:
+                print("{} {} deaths: {} kills: {}".format(hero.name, hero.kills/hero.deaths, hero.deaths, hero.kills))
+            else:
+                print("{} deaths: 0 kills: {}".format(hero.name, hero.kills))
 
     def update_kills(self):
         for hero in self.heroes:
             team_kills += hero.kills
-        return team_kills
+        return hero.kills
 
 class Armor:
     def __init__(self, name, defense):
@@ -223,7 +226,7 @@ class Arena:
         self.team_two = Team("second_team")
         team_not_picked = True
         while team_not_picked:
-            team_select = input("Please pick a your team from the following options: \n Enter '0' for The Avengers \n enter '1' for Daenerys and her dragons from Game of Thrones \n enter '2' for some late night comedians \n enter '3' for Disney Princesses. \n enter '4' to create your own team from scratch \n : ")
+            team_select = input("Please pick a your team from the following options: \n Enter '0' for The Avengers \n enter '1' for Daenerys and her dragons from Game of Thrones \n enter '2' for some late night comedians \n enter '3' for Disney Princesses \n enter '4' to create your own team from scratch \n : ")
             if team_select == "0":
                 self.team_two.name = "The Avengers"
                 for avenger in avengers:
@@ -354,7 +357,7 @@ class Arena:
         self.equip_heroes(self.team_two)
 
         coin_flip = random.randint(1, 2)
-        print("Coin flip selects team ", coin_flip)
+        print("Coin flip selects team", coin_flip)
         if coin_flip == 1:
             self.team_one.attack(self.team_two)
             self.team_two.attack(self.team_one)
@@ -390,7 +393,7 @@ if __name__ == "__main__":
     # print(other_team)
     # print(team)
 
-    team.attack(other_team)
+    # team.attack(other_team)
 
 
     Arena().fight()
