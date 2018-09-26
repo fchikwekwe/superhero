@@ -61,6 +61,7 @@ class Hero:
     def add_kill(self, num_kills):
         self.kills += num_kills
 
+
     def add_armor(self, armor):
         self.armors.append(armor)
 
@@ -74,7 +75,6 @@ class Team:
     def __init__(self, team_name):
         self.name = team_name
         self.heroes = list()
-
 
     def add_hero(self, Hero):
         self.heroes.append(Hero)
@@ -112,7 +112,10 @@ class Team:
             # get the attack value from the hero and add it to total team attack
             team_attack += hero.attack()
         # create a variable that store the total kills based on the other team's defense
+        # the kill needs to only be recorded for the hero that did the damage
+        # need to check each hero
         num_kills = other_team.defend(team_attack)
+        print("team: {} num_kills: {}".format(self.name, num_kills))
         for hero in self.heroes:
             hero.add_kill(num_kills)
 
@@ -121,7 +124,7 @@ class Team:
         hero_damage = damage // len(self.heroes)
         for hero in self.heroes:
             if hero.health <= 0:
-                continue
+                pass
             elif hero.health <= hero_damage:
                 hero.health -= hero_damage
                 hero.deaths += 1
@@ -130,7 +133,7 @@ class Team:
                 hero.health -= hero_damage
             else:
                 hero.health -= hero_damage
-        return hero.deaths
+        return team_deaths
 
     def defend(self, damage_amt):
         team_defense = 0
@@ -149,14 +152,14 @@ class Team:
     def stats(self):
         for hero in self.heroes:
             if hero.deaths > 0:
-                print("{} {} deaths: {} kills: {}".format(hero.name, hero.kills/hero.deaths, hero.deaths, hero.kills))
+                print("Team: {}; Hero: {}; Kill/Death Ratio: {}; deaths: {}; kills: {}".format(self.name, hero.name, hero.kills/hero.deaths, hero.deaths, hero.kills))
             else:
-                print("{} deaths: 0 kills: {}".format(hero.name, hero.kills))
+                print("Team: {}; Hero: {}; deaths: 0; kills: {}".format(self.name, hero.name, hero.kills))
 
     def update_kills(self):
         for hero in self.heroes:
             team_kills += hero.kills
-        return hero.kills
+        return team_kills
 
 class Armor:
     def __init__(self, name, defense):
@@ -183,7 +186,7 @@ class Arena:
         # team select
         team_not_picked = True
         while team_not_picked:
-            team_select = input("Please pick a your team from the following options: \n Enter '0' for The Justice League \n enter '1' for The Stark Family from Game of Thrones \n enter '2' for the crew of the Normandy from Mass Effect \n enter '3' for some feisty zoo animals. \n enter '4' to create your own team from scratch \n : ")
+            team_select = input("Please pick your team from the following options: \n Enter '0' for The Justice League \n enter '1' for The Stark Family from Game of Thrones \n enter '2' for the crew of the Normandy from Mass Effect \n enter '3' for some feisty zoo animals \n enter '4' to create your own team from scratch \n : ")
             if team_select == "0":
                 self.team_one.name = "Justice League"
                 for leaguer in justice_league:
@@ -226,7 +229,7 @@ class Arena:
         self.team_two = Team("second_team")
         team_not_picked = True
         while team_not_picked:
-            team_select = input("Please pick a your team from the following options: \n Enter '0' for The Avengers \n enter '1' for Daenerys and her dragons from Game of Thrones \n enter '2' for some late night comedians \n enter '3' for Disney Princesses \n enter '4' to create your own team from scratch \n : ")
+            team_select = input("Please pick your team from the following options: \n Enter '0' for The Avengers \n enter '1' for Daenerys and her dragons from Game of Thrones \n enter '2' for some late night comedians \n enter '3' for Disney Princesses \n enter '4' to create your own team from scratch \n : ")
             if team_select == "0":
                 self.team_two.name = "The Avengers"
                 for avenger in avengers:
@@ -359,41 +362,52 @@ class Arena:
         coin_flip = random.randint(1, 2)
         print("Coin flip selects team", coin_flip)
         if coin_flip == 1:
+            print("{} goes first!".format(self.team_one.name))
             self.team_one.attack(self.team_two)
-            self.team_two.attack(self.team_one)
+            for hero in self.team_two.heroes:
+                if hero.health > 0:
+                    self.team_two.attack(self.team_one)
+                else:
+                    pass
+            print("{} have died! Stats are listed below!".format(self.team_two.name))
         else:
+            print("{} goes first!".format(self.team_two.name))
             self.team_two.attack(self.team_one)
-            self.team_one.attack(self.team_two)
+            for hero in self.team_one.heroes:
+                if hero.health > 0:
+                    self.team_one.attack(self.team_two)
+                else:
+                    pass
+            print("{} has died! Stats are listed below!".format(self.team_one.name))
 
-        print(self.show_stats())
         self.show_stats()
 
 
 if __name__ == "__main__":
-    hero = Hero("Wonder Woman")
-    ability = Ability("Divine Speed", 300)
-    hero.add_ability(ability)
-
-    other_hero = Hero("Flash")
-    other_ability = Ability("Super Fast", 200)
-    other_hero.add_ability(other_ability)
-
-    # print(hero.attack())
-    # print(hero.attack())
-    # new_ability = Ability("Super Human Strength", 800)
-    # hero.add_ability(new_ability)
-    # print(hero.attack())
-
-    team = Team("Test Team")
-    team.add_hero(hero)
-
-    other_team = Team("Other Test Team")
-    other_team.add_hero(other_hero)
-
-    # print(other_team)
-    # print(team)
-
-    # team.attack(other_team)
+    # hero = Hero("Wonder Woman")
+    # ability = Ability("Divine Speed", 300)
+    # hero.add_ability(ability)
+    #
+    # other_hero = Hero("Flash")
+    # other_ability = Ability("Super Fast", 200)
+    # other_hero.add_ability(other_ability)
+    #
+    # # print(hero.attack())
+    # # print(hero.attack())
+    # # new_ability = Ability("Super Human Strength", 800)
+    # # hero.add_ability(new_ability)
+    # # print(hero.attack())
+    #
+    # team = Team("Test Team")
+    # team.add_hero(hero)
+    #
+    # other_team = Team("Other Test Team")
+    # other_team.add_hero(other_hero)
+    #
+    # # print(other_team)
+    # # print(team)
+    #
+    # # team.attack(other_team)
 
 
     Arena().fight()
