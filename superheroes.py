@@ -111,6 +111,7 @@ class Team:
         for hero in self.heroes:
             # get the attack value from the hero and add it to total team attack
             team_attack += hero.attack()
+            # print("team attack after each hero:", team_attack)
         # create a variable that store the total kills based on the other team's defense
         # the kill needs to only be recorded for the hero that did the damage
         # need to check each hero
@@ -267,24 +268,25 @@ class Arena:
         # allow changes to team comp
         team_not_edited = True
         while team_not_edited:
-            for x in team:
+            for x in team.heroes:
                 print(x.name, "is on your team!")
             add_remove = input("Would you like to add or remove any heroes from your team? \nType 'R' to remove, 'A' to add or 'N' if you do not want to change the composition of your team \n : ")
             if add_remove.lower() == 'r':
-                number = str(len(team))
+                number = str(len(team.heroes))
                 remove = input("Please select the list number of the hero you would like to remove. You can select between 1 and " + number + ", respectively. \n : ")
                 if remove.isdigit():
                     try:
-                        team.pop(int(remove) - 1)
+                        team.heroes.pop(int(remove) - 1)
                     except IndexError:
                         print("Make sure your choice is between 0 and " + remove + ".")
                 elif remove.isdigit() == False:
                     print("Please try again. ")
                     # fix adding object not string
             elif add_remove.lower() == 'a':
-                number = str(len(team))
+                number = str(len(team.heroes))
                 add = input("Please name the hero that you would like to add. \n : ")
-                team.append(add)
+                hero = Hero(add)
+                team.add_hero(hero)
             elif add_remove.lower() == 'n':
                 team_not_edited = False
             else:
@@ -352,15 +354,15 @@ class Arena:
         self.team_two.stats()
 
     def fight(self):
-        self.build_team_one()
-        self.edit_team(self.team_one.heroes)
-        self.build_team_two()
-        self.edit_team(self.team_two.heroes)
-        self.equip_heroes(self.team_one)
-        self.equip_heroes(self.team_two)
-
         game_is_running = True
         while game_is_running:
+            self.build_team_one()
+            self.edit_team(self.team_one)
+            self.build_team_two()
+            self.edit_team(self.team_two)
+            self.equip_heroes(self.team_one)
+            self.equip_heroes(self.team_two)
+
             coin_flip = random.randint(1, 2)
             print("Coin flip selects team", coin_flip)
             if coin_flip == 1:
@@ -392,13 +394,20 @@ class Arena:
                 print("{} has died! Stats are listed below!".format(self.team_one.name))
 
             self.show_stats()
+            decide_to_play = True
+            while decide_to_play:
+                play_again = input("Would you like to battle again? Type 'Y' for yes or 'N' for no \n : ")
+                if play_again.lower() == 'n':
+                    print("Thanks for playing!")
+                    game_is_running = False
+                    decide_to_play = False
+                elif play_again.lower() == 'y':
+                    self.team_one.revive_heroes()
+                    self.team_two.revive_heroes()
+                    decide_to_play = False
+                else:
+                    print("Please pick a valid option!")
 
-            play_again = input("Would you like to battle again? Type 'Y' for yes or 'N' for no \n : ")
-            if play_again.lower() == 'n':
-                game_is_running = False
-            else:
-                team_one.revive_heroes()
-                team_two.revive_heroes()
 
 if __name__ == "__main__":
     # hero = Hero("Wonder Woman")
