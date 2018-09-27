@@ -359,29 +359,46 @@ class Arena:
         self.equip_heroes(self.team_one)
         self.equip_heroes(self.team_two)
 
-        coin_flip = random.randint(1, 2)
-        print("Coin flip selects team", coin_flip)
-        if coin_flip == 1:
-            print("{} goes first!".format(self.team_one.name))
-            self.team_one.attack(self.team_two)
-            for hero in self.team_two.heroes:
-                if hero.health > 0:
+        game_is_running = True
+        while game_is_running:
+            coin_flip = random.randint(1, 2)
+            print("Coin flip selects team", coin_flip)
+            if coin_flip == 1:
+                hero_health = 0
+                for hero in self.team_one.heroes:
+                    hero_health += hero.health
+
+                print("{} goes first!".format(self.team_one.name))
+                self.team_one.attack(self.team_two)
+
+                if hero_health > 0:
                     self.team_two.attack(self.team_one)
                 else:
                     pass
-            print("{} have died! Stats are listed below!".format(self.team_two.name))
-        else:
-            print("{} goes first!".format(self.team_two.name))
-            self.team_two.attack(self.team_one)
-            for hero in self.team_one.heroes:
-                if hero.health > 0:
+                print("{} have died! Stats are listed below!".format(self.team_two.name))
+
+            else:
+                hero_health = 0
+                for hero in self.team_two.heroes:
+                    hero_health += hero.health
+
+                print("{} goes first!".format(self.team_two.name))
+                self.team_two.attack(self.team_one)
+
+                if hero_health > 0:
                     self.team_one.attack(self.team_two)
                 else:
                     pass
-            print("{} has died! Stats are listed below!".format(self.team_one.name))
+                print("{} has died! Stats are listed below!".format(self.team_one.name))
 
-        self.show_stats()
+            self.show_stats()
 
+            play_again = input("Would you like to battle again? Type 'Y' for yes or 'N' for no \n : ")
+            if play_again.lower() == 'n':
+                game_is_running = False
+            else:
+                team_one.revive_heroes()
+                team_two.revive_heroes()
 
 if __name__ == "__main__":
     # hero = Hero("Wonder Woman")
